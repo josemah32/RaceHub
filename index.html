@@ -233,27 +233,15 @@
 
     // --- LÓGICA DE BACKEND (NETLIFY + NEON) ---
     async function loadEventsFromDB() {
-        const loadingMsg = document.getElementById('next-race-name');
-        
-        try {
-            // Llamada a la Netlify Function que conecta con Neon
-            const response = await fetch('/.netlify/functions/get_races');
-            
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            
-            events = await response.json();
-            
-            // Actualizar interfaz con los nuevos datos
-            console.log("Eventos cargados desde Neon:", events.length);
-            loadingMsg.innerText = "Calculando próxima carrera...";
-            renderList();
-            renderCalendar();
-            updateCountdown();
-        } catch (error) {
-            console.error("Error cargando eventos:", error);
-            loadingMsg.innerText = "Error: No se pudo conectar a la base de datos.";
-        }
+    try {
+        const response = await fetch('https://tu-url-de-render.onrender.com/api/races');
+        events = await response.json();
+        renderList();
+        updateCountdown();
+    } catch (error) {
+        console.error("El servidor de Render está despertando...", error);
     }
+}
 
     // --- FUNCIONES DE UTILIDAD ---
     function parseEventDate(str) {
@@ -460,6 +448,7 @@
 </body>
 
 </html>
+
 
 
 

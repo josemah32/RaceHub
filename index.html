@@ -234,7 +234,7 @@
     // --- LÓGICA DE BACKEND (NETLIFY + NEON) ---
     async function loadEventsFromDB() {
     try {
-        const response = await fetch('https://tu-url-de-render.onrender.com/api/races');
+        const response = await fetch('https://racehub-api.onrender.com/api/races');
         events = await response.json();
         renderList();
         updateCountdown();
@@ -448,6 +448,7 @@
 </body>
 
 </html>
+
 
 
 

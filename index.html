@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RaceHub</title>
@@ -12,7 +14,7 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-pure: #ffffff;
             --text-dim: #94a3b8;
-            --f1: #ff1801; --motogp: #ff6600; --dtm: #fbff00; --imsa: #15ff00; --wec: #00aeff;
+            --f1: #ff1801; --motogp: #ff6600; --dtm: #fbff00; --imsa: #15ff00; --wec: #00aeff; --name: #b3bdcc;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
@@ -99,24 +101,25 @@
     margin-top: 50px;
     position: relative;
     /* Un degradado muy sutil para dar profundidad */
-    background: linear-gradient(to top, rgba(255, 24, 1, 0.05) 0%, transparent 100%);
+    background: linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 0%, transparent 100%);
     border-top: 1px solid var(--glass-border);
+    font-family: 'Inter', sans-serif;
 }
 
 .main-footer p {
     color: var(--text-dim);
     font-size: 0.8rem;
     letter-spacing: 2px;
-    text-transform: uppercase;
+    text-transform: lowercase;
     font-weight: 400;
 }
 
 .main-footer span {
-    color: var(--f1); /* Uso del rojo de tu variable :root */
+    color: var(--name); /* Uso del rojo de tu variable :root */
     font-weight: 800;
     margin-left: 4px;
     /* Efecto de brillo suave en el nombre */
-    text-shadow: 0 0 15px rgba(255, 24, 1, 0.4);
+    text-shadow: 0 0 15px rgba(148, 163, 184, 0.4);
     transition: all 0.3s ease;
     cursor: default;
 }
@@ -127,7 +130,7 @@
 }
         
         .nav-arrow {
-            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            background: rgba(148, 163, 184, 0.05); border: 1px solid var(--glass-border);
             color: white; width: 45px; height: 45px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.3s; font-size: 1.2rem;
@@ -488,8 +491,6 @@
 </body>
 
 </html>
-
-
 
 
 

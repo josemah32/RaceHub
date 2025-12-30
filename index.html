@@ -92,6 +92,40 @@
         .filter-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
         .filter-btn.active { background: white; color: black; font-weight: bold; border-color: white; transform: scale(1.05); }
 
+        /* --- ESTILO DEL PIE DE PÁGINA --- */
+.main-footer {
+    text-align: center;
+    padding: 60px 0 30px 0;
+    margin-top: 50px;
+    position: relative;
+    /* Un degradado muy sutil para dar profundidad */
+    background: linear-gradient(to top, rgba(255, 24, 1, 0.05) 0%, transparent 100%);
+    border-top: 1px solid var(--glass-border);
+}
+
+.main-footer p {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+.main-footer span {
+    color: var(--f1); /* Uso del rojo de tu variable :root */
+    font-weight: 800;
+    margin-left: 4px;
+    /* Efecto de brillo suave en el nombre */
+    text-shadow: 0 0 15px rgba(255, 24, 1, 0.4);
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.main-footer span:hover {
+    color: white;
+    text-shadow: 0 0 20px var(--f1);
+}
+        
         .nav-arrow {
             background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
             color: white; width: 45px; height: 45px; border-radius: 50%;
@@ -159,6 +193,9 @@
             transform: scale(0.8); opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 1px solid var(--glass-border);
         }
+
+                                                    
+        
         .modal.active .modal-content { transform: scale(1); opacity: 1; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -184,7 +221,7 @@
 <div class="racehub-announcement">
     <span class="announcement-tag">Aviso</span>
     <p class="announcement-text">
-        🚨 <strong>IMPORTANTE:</strong> Los horarios han sido buscados con IA y estan en proceso de revisión. Algunos pueden ser erroneos a fecha de hoy solo la f1 ha sido revisada hasta el GP de Madrid incluido. 
+        🚨 <strong>IMPORTANTE:</strong> Los horarios han sido buscados con IA y estan en proceso de revisión. Algunos pueden ser erroneos a fecha de hoy solo la F1 ha sido revisada hasta el GP de Madrid incluido. 
     </p>
 </div>
     
@@ -445,9 +482,13 @@
     loadEventsFromDB();
 
 </script>
+    <footer class="main-footer">
+        <p>Made by <span>josemah</span></p>
+    </footer>
 </body>
 
 </html>
+
 
 
 

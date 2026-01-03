@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-X3C7KKHX56"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-X3C7KKHX56');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X3C7KKHX56"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-X3C7KKHX56');
+    </script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RaceHub</title>
+    <title>RaceHub 2026</title>
     <link rel="icon" type="image/png" href="RaceHub.png">
+    
     <style>
         :root {
             --bg: #08080c;
@@ -29,71 +29,139 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text-pure); min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
 
-        header { text-align: center; padding: 40px 20px; animation: fadeInDown 0.8s ease-out; }
+        /* --- TRANSICIÓN DE PÁGINA (ESTILO LANDO) --- */
+        .page-wipe {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--f1);
+            z-index: 9999;
+            transform: translateY(100%);
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none;
+            will-change: transform;
+        }
+        .wipe-logo {
+            font-size: 8rem; font-weight: 900; color: rgba(0,0,0,0.1);
+            font-style: italic; opacity: 0; transform: scale(0.8); transition: all 0.3s;
+        }
         
-        .logo-container { margin-bottom: 15px; }
+        .page-wipe.active-in {
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            transform: translateY(0);
+            pointer-events: all;
+        }
+        .page-wipe.active-in .wipe-logo { opacity: 1; transform: scale(1.1); }
+
+        .page-wipe.active-out {
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            transform: translateY(-100%);
+            pointer-events: none;
+        }
+
+        /* --- HEADER Y NAV --- */
+        header { text-align: center; padding: 30px 20px 20px; animation: fadeInDown 0.8s ease-out; }
+        
+        .logo-container { margin-bottom: 10px; }
         .main-logo { 
-            height: 70px; 
-            width: auto; 
+            height: 60px; width: auto; 
             filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.2));
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .main-logo:hover { transform: scale(1.1) rotate(-2deg); }
 
-        /* --- ESTILO DEL MENSAJE DE ADVERTENCIA (ESTÁTICO) --- */
+        .main-nav {
+            display: flex; justify-content: center; gap: 30px; margin: 20px 0;
+        }
+        .nav-link {
+            background: transparent; border: none; color: var(--text-dim);
+            font-size: 1rem; cursor: pointer; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 2px;
+            padding: 5px 0; transition: 0.3s; position: relative;
+        }
+        .nav-link:hover, .nav-link.active { color: white; }
+        .nav-link.active::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 100%;
+            height: 3px; background: var(--f1); box-shadow: 0 0 10px var(--f1);
+        }
+
+        /* --- MENSAJE DE ADVERTENCIA --- */
         .racehub-announcement {
-            max-width: 900px;
-            margin: 0 auto 25px;
+            max-width: 900px; margin: 0 auto 25px;
             background: linear-gradient(90deg, rgba(255, 24, 1, 0.2) 0%, rgba(255, 24, 1, 0.05) 100%);
-            border-left: 4px solid var(--f1);
-            border-radius: 8px;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            border-left: 4px solid var(--f1); border-radius: 8px;
+            padding: 15px 20px; display: flex; align-items: center; gap: 15px;
             animation: fadeIn 1s ease;
         }
-
         .announcement-tag {
-            background: var(--f1);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 900;
-            padding: 4px 8px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: var(--f1); color: white; font-size: 0.7rem; font-weight: 900;
+            padding: 4px 8px; border-radius: 4px; text-transform: uppercase;
         }
+        .announcement-text { font-size: 0.9rem; color: #eee; line-height: 1.4; }
 
-        .announcement-text {
-            font-size: 0.9rem;
-            color: #eee;
-            line-height: 1.4;
-        }
-        
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        /* --- COUNTDOWN --- */
         .countdown-container {
             background: var(--glass); border: 1px solid var(--f1);
             display: inline-block; padding: 15px 30px; border-radius: 12px;
-            box-shadow: 0 0 20px rgba(255, 24, 1, 0.1); margin-top: 15px;
+            box-shadow: 0 0 20px rgba(255, 24, 1, 0.1); margin-top: 10px;
             transition: transform 0.3s ease;
         }
         .countdown-container:hover { transform: scale(1.02); }
-
         #timer { font-family: monospace; font-size: 1.5rem; letter-spacing: 2px; }
 
+        /* --- CONTROLES Y INPUTS --- */
         .controls { max-width: 900px; margin: 0 auto 30px; padding: 0 20px; text-align: center; animation: fadeIn 1s ease-in; }
-
+        
         .search-bar {
             width: 100%; background: var(--glass); border: 1px solid var(--glass-border);
             padding: 12px 20px; border-radius: 30px; color: white; margin-bottom: 15px;
             transition: all 0.3s ease;
         }
         .search-bar:focus { outline: none; border-color: var(--f1); box-shadow: 0 0 15px rgba(255, 24, 1, 0.2); }
+        
+        /* --- SELECTOR DE CRISTAL (ESTILIZADO) --- */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+            max-width: 300px; /* Ajustado para que quepa bien el texto */
+            margin: 0 auto 20px;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 1rem;
+        }
+        .dropdown-selected {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            display: flex; justify-content: center; align-items: center;
+            transition: 0.3s;
+        }
+        .dropdown-selected::after {
+            content: '▼'; font-size: 0.6rem; margin-left: 10px; color: var(--text-dim); transition: 0.3s;
+        }
+        .custom-dropdown.open .dropdown-selected::after { transform: rotate(180deg); }
+        
+        .dropdown-options {
+            position: absolute; top: calc(100% + 8px); left: 0; width: 100%;
+            background: rgba(15, 15, 22, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            display: none; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .dropdown-options.active { display: block; animation: fadeIn 0.2s ease-out; }
+        
+        .dropdown-item {
+            padding: 14px; color: var(--text-dim); text-align: center; transition: 0.2s;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .dropdown-item:hover { background: rgba(255, 255, 255, 0.08); color: white; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
         .filter-btn {
             background: var(--glass); border: 1px solid var(--glass-border);
@@ -103,41 +171,36 @@
         .filter-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
         .filter-btn.active { background: white; color: black; font-weight: bold; border-color: white; transform: scale(1.05); }
 
-               /* --- ESTILO DEL PIE DE PÁGINA --- */
-.main-footer {
-    text-align: center;
-    padding: 60px 0 30px 0;
-    margin-top: 50px;
-    position: relative;
-    /* Un degradado muy sutil para dar profundidad */
-    background: linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 0%, transparent 100%);
-    border-top: 1px solid var(--glass-border);
-    font-family: 'Inter', sans-serif;
-}
-
-.main-footer p {
-    color: var(--text-dim);
-    font-size: 1rem;
-    letter-spacing: 1px;
-    text-transform: lowercase;
-    font-weight: 400;
-}
-
-.main-footer span {
-    color: var(--name); /* Uso del rojo de tu variable :root */
-    font-weight: 800;
-    margin-left: 4px;
-    /* Efecto de brillo suave en el nombre */
-    text-shadow: 0 0 15px rgba(148, 163, 184, 0.4);
-    transition: all 0.3s ease;
-    cursor: default;
-}
-
-.main-footer span:hover {
-    color: white;
-    text-shadow: 0 0 20px var(--f1);
-}
+        /* --- LAYOUT GENERAL --- */
+        main { max-width: 900px; margin: 0 auto; padding: 0 20px; min-height: 400px; }
         
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* --- TARJETAS (LISTA) --- */
+        .card {
+            background: var(--glass); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 20px; margin-bottom: 12px;
+            display: grid; grid-template-columns: 5px 1fr auto; gap: 20px;
+            align-items: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0; animation: slideInRight 0.5s forwards;
+        }
+        .card:hover { transform: translateX(10px); background: rgba(30, 30, 40, 0.95); border-color: rgba(255,255,255,0.3); }
+        .cat-line { width: 5px; height: 40px; border-radius: 10px; }
+        .time-box { text-align: right; font-weight: bold; }
+
+        /* --- CALENDARIO GRID --- */
+        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; animation: fadeIn 0.5s ease; }
+        .day {
+            background: var(--glass); aspect-ratio: 1/1; border-radius: 10px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 1px solid var(--glass-border); cursor: pointer; transition: all 0.3s ease;
+        }
+        .day:hover { background: rgba(255,255,255,0.1); border-color: white; transform: scale(1.1); z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .dot { width: 6px; height: 6px; border-radius: 50%; margin: 1px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
         .nav-arrow {
             background: rgba(148, 163, 184, 0.05); border: 1px solid var(--glass-border);
             color: white; width: 45px; height: 45px; border-radius: 50%;
@@ -146,72 +209,65 @@
         }
         .nav-arrow:hover { background: white; color: black; transform: scale(1.1); }
 
-        main { max-width: 900px; margin: 0 auto; padding: 0 20px; }
-
-        .card {
+        /* --- NUEVA PÁGINA: CLASIFICACIÓN --- */
+        .standings-header { text-align: center; animation: fadeIn 0.8s ease; }
+        .standings-table-container {
             background: var(--glass); border: 1px solid var(--glass-border);
-            border-radius: 16px; padding: 20px; margin-bottom: 12px;
-            display: grid; grid-template-columns: 5px 1fr auto; gap: 20px;
-            align-items: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0; animation: slideInRight 0.5s forwards;
+            border-radius: 16px; padding: 20px; overflow-x: auto;
+            animation: slideInRight 0.6s ease;
         }
-        .card:hover { 
-            transform: translateX(10px); 
-            background: rgba(30, 30, 40, 0.95);
-            border-color: rgba(255,255,255,0.3);
+        .standings-table { width: 100%; border-collapse: collapse; color: white; min-width: 500px; }
+        .standings-table th {
+            text-align: left; padding: 15px; border-bottom: 2px solid var(--glass-border);
+            color: var(--text-dim); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;
         }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .cat-line { width: 5px; height: 40px; border-radius: 10px; }
-        .time-box { text-align: right; font-weight: bold; }
-
-        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; animation: fadeIn 0.5s ease; }
+        .standings-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
+        .standings-table tr:last-child td { border-bottom: none; }
+        .standings-table tr:hover { background: rgba(255,255,255,0.05); }
         
-        .day {
-            background: var(--glass); aspect-ratio: 1/1; border-radius: 10px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border: 1px solid var(--glass-border); cursor: pointer; transition: all 0.3s ease;
+        .pos-badge {
+            display: inline-flex; width: 32px; height: 32px;
+            background: #222; border-radius: 50%; align-items: center; justify-content: center;
+            font-weight: bold; font-family: monospace; font-size: 0.9rem;
         }
-        .day:hover { 
-            background: rgba(255,255,255,0.1); 
-            border-color: white; 
-            transform: scale(1.1); 
-            z-index: 10;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-
-        .dot { width: 6px; height: 6px; border-radius: 50%; margin: 1px; animation: pulse 2s infinite; }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
+        .pos-1 { background: #d4af37; color: black; box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
+        .pos-2 { background: #c0c0c0; color: black; }
+        .pos-3 { background: #cd7f32; color: black; }
+        
+        .team-pill {
+            font-size: 0.7rem; padding: 3px 8px; border-radius: 4px;
+            margin-left: 10px; background: rgba(255,255,255,0.08); color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
 
+        /* --- MODAL --- */
         .modal {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
             backdrop-filter: blur(0px); z-index: 3000; align-items: center; justify-content: center;
             transition: all 0.3s ease;
         }
         .modal.active { display: flex; backdrop-filter: blur(15px); background: rgba(0,0,0,0.85); }
-
         .modal-content { 
             background: #111; padding: 30px; border-radius: 24px; width: 90%; max-width: 500px; 
             transform: scale(0.8); opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 1px solid var(--glass-border);
         }
-
-                                                    
-        
         .modal.active .modal-content { transform: scale(1); opacity: 1; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* --- FOOTER --- */
+        .main-footer {
+            text-align: center; padding: 60px 0 30px 0; margin-top: 50px;
+            background: linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 0%, transparent 100%);
+            border-top: 1px solid var(--glass-border);
+        }
+        .main-footer p { color: var(--text-dim); font-size: 1rem; letter-spacing: 1px; text-transform: lowercase; }
+        .main-footer span {
+            color: var(--name); font-weight: 800; margin-left: 4px;
+            text-shadow: 0 0 15px rgba(148, 163, 184, 0.4); transition: all 0.3s ease; cursor: default;
+        }
+        .main-footer span:hover { color: white; text-shadow: 0 0 20px var(--f1); }
 
+        /* UTILS */
         .bg-f1 { background: var(--f1); } .bg-motogp { background: var(--motogp); }
         .bg-dtm { background: var(--dtm); } .bg-imsa { background: var(--imsa); }
         .bg-wec { background: var(--wec); }
@@ -219,292 +275,604 @@
 </head>
 <body>
 
-<header>
-  <div class="logo-container">
-        <img src="RaceHub.png" alt="Logo" class="main-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/5602/5602690.png'">
-  </div>
-    <h1>RaceHub</h1>
-    <div class="countdown-container">
-        <div id="next-race-name" style="font-size: 0.9rem; margin-bottom: 5px; color: var(--text-dim);">Conectando con Neon...</div>
-        <div id="timer">00d 00h 00m 00s</div>
+    <div id="page-wipe" class="page-wipe">
+        <div class="wipe-logo">RH</div>
     </div>
-</header>
 
-<div class="racehub-announcement">
-    <span class="announcement-tag">Aviso</span>
-    <p class="announcement-text">
-        🚨 <strong>IMPORTANTE:</strong> Los horarios han sido buscados con IA y estan en proceso de revisión. Algunos pueden ser erroneos a fecha de hoy solo la F1 ha sido revisada hasta el GP de Madrid incluido. 
-    </p>
-</div>
-    
-<div class="controls">
-    <input type="text" id="search" class="search-bar" placeholder="Buscar GP o Categoría...">
-    <div id="filter-container">
-        <button class="filter-btn active" data-cat="all">Todos</button>
-        <button class="filter-btn" data-cat="F1">F1</button>
-        <button class="filter-btn" data-cat="MotoGP">MotoGP</button>
-        <button class="filter-btn" data-cat="WEC">WEC</button>
-        <button class="filter-btn" data-cat="IMSA">IMSA</button>
-        <button class="filter-btn" data-cat="DTM">DTM</button>
-    </div>
-    <div style="margin-top: 15px;">
-        <button id="view-list-btn" class="filter-btn active">Lista</button>
-        <button id="view-cal-btn" class="filter-btn">Calendario</button>
-    </div>
-</div>
-
-<main>
-    <section id="view-list"></section>
-    <section id="view-calendar" style="display:none;">
-        <div class="calendar-nav">
-            <button id="prevMonth" class="nav-arrow">‹</button>
-            <h2 id="month-label" style="text-transform: capitalize;"></h2>
-            <button id="nextMonth" class="nav-arrow">›</button>
+    <header>
+        <div class="logo-container">
+            <img src="RaceHub.png" alt="Logo" class="main-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/5602/5602690.png'">
         </div>
-        <div class="calendar-grid" id="calendar-grid"></div>
-    </section>
-</main>
+        
+        <nav class="main-nav">
+            <button onclick="switchPage('home')" class="nav-link active" id="nav-home">Calendario</button>
+            <button onclick="switchPage('standings')" class="nav-link" id="nav-standings">Clasificación</button>
+        </nav>
 
-<div class="modal" id="modal">
-    <div class="modal-content">
-        <h2 id="modal-date" style="margin-bottom:20px; border-bottom: 1px solid #333; padding-bottom: 10px;"></h2>
-        <div id="modal-events"></div>
-        <button class="filter-btn active" onclick="closeModal()" style="width: 100%; margin-top: 20px; padding: 12px;">Cerrar</button>
-    </div>
-</div>
+        <h1>RaceHub</h1>
+        <div class="countdown-container">
+            <div id="next-race-name" style="font-size: 0.9rem; margin-bottom: 5px; color: var(--text-dim);">Conectando con Neon...</div>
+            <div id="timer">00d 00h 00m 00s</div>
+        </div>
+    </header>
 
-<script>
-    // Inicialización de variables
-    let events = [];
-    let currentMonth = new Date().getMonth();
-    let currentYear = new Date().getFullYear();
-    let filter = 'all';
-
-    // --- LÓGICA DE BACKEND (NETLIFY + NEON) ---
-    async function loadEventsFromDB() {
-    try {
-        const response = await fetch('https://racehub-api.onrender.com/api/races');
-        events = await response.json();
-        renderList();
-        updateCountdown();
-    } catch (error) {
-        console.error("El servidor de Render está despertando...", error);
-    }
-}
-
-    // --- FUNCIONES DE UTILIDAD ---
-    function parseEventDate(str) {
-        if (!str) return new Date();
-        // Soporte para fechas ISO (DB) y formato simple
-        let datePart = str.includes('T') ? str.split('T')[0] : str;
-        return new Date(datePart + "T00:00:00");
-    }
-
-    // --- RENDERIZADO (LISTA) ---
-    function renderList() {
-        const list = document.getElementById('view-list');
-        const searchTerm = document.getElementById('search').value.toLowerCase();
-        list.innerHTML = "";
-
-        if (events.length === 0) {
-            list.innerHTML = "<p style='text-align:center; padding:20px; color:var(--text-dim)'>Cargando eventos...</p>";
-            return;
-        }
-
-        const filtered = events.filter(ev => {
-            const matchesFilter = filter === 'all' || ev.series === filter;
-            const matchesSearch = ev.name.toLowerCase().includes(searchTerm) || ev.series.toLowerCase().includes(searchTerm);
-            return matchesFilter && matchesSearch;
-        }).sort((a,b) => parseEventDate(a.date) - parseEventDate(b.date));
-
-        filtered.forEach((ev, index) => {
-            const d = parseEventDate(ev.date);
-            // Comprobación segura de si tiene hora asignada
-            const hasTime = ev.date.includes("T") && !ev.date.includes("Sin hora");
+    <main>
+        <div id="page-home">
+            <div class="racehub-announcement">
+                <span class="announcement-tag">Aviso</span>
+                <p class="announcement-text">
+                    🚨 <strong>IMPORTANTE:</strong> Los horarios han sido buscados con IA y estan en proceso de revisión. Algunos pueden ser erroneos a fecha de hoy solo la F1 ha sido revisada hasta el GP de Madrid incluido.
+                </p>
+            </div>
             
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.style.animationDelay = `${Math.min(index * 0.05, 1)}s`;
-            
-            card.innerHTML = `
-                <div class="cat-line bg-${ev.series.toLowerCase()}"></div>
-                <div class="info">
-                    <p style="color:var(--${ev.series.toLowerCase()}); font-weight:bold; font-size:0.7rem;">${ev.series}</p>
-                    <h3>${ev.name}</h3>
-                    <p style="color:var(--text-dim); font-size:0.85rem;">${ev.type}</p>
+            <div class="controls">
+                <input type="text" id="search" class="search-bar" placeholder="Buscar GP o Categoría...">
+                <div id="filter-container">
+                    <button class="filter-btn active" data-cat="all">Todos</button>
+                    <button class="filter-btn" data-cat="F1">F1</button>
+                    <button class="filter-btn" data-cat="MotoGP">MotoGP</button>
+                    <button class="filter-btn" data-cat="WEC">WEC</button>
+                    <button class="filter-btn" data-cat="IMSA">IMSA</button>
+                    <button class="filter-btn" data-cat="DTM">DTM</button>
                 </div>
-                <div class="time-box">
-                    <div class="date">${d.getDate()} ${d.toLocaleString('es', {month:'short'})}</div>
-                    <div class="hour" style="color:var(--text-dim); font-size:0.9rem;">
-                        ${hasTime ? new Date(ev.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : 'TBD'}
-                    </div>
-                </div>
-            `;
-            list.appendChild(card);
-        });
-    }
-
-    // --- RENDERIZADO (CALENDARIO) ---
-    function renderCalendar() {
-        const grid = document.getElementById('calendar-grid');
-        const label = document.getElementById('month-label');
-        grid.innerHTML = "";
-        
-        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        label.innerText = new Date(currentYear, currentMonth).toLocaleString('es', {month:'long', year:'numeric'});
-
-        // Ajuste para Lunes = primer día (Opcional, aquí Domingo=0 es estándar JS)
-        let gaps = firstDay === 0 ? 6 : firstDay - 1;
-        
-        for(let i=0; i<gaps; i++) grid.appendChild(document.createElement('div'));
-
-        for(let d=1; d<=daysInMonth; d++) {
-            const dayDiv = document.createElement('div');
-            dayDiv.className = 'day';
-            dayDiv.style.animation = `fadeIn 0.3s ease forwards ${Math.min(d * 0.02, 0.5)}s`;
-            dayDiv.innerHTML = `<span style="font-size:0.9rem; margin-bottom:4px;">${d}</span>`;
-            
-            const dayEvents = events.filter(ev => {
-                const date = parseEventDate(ev.date);
-                return date.getDate() === d && date.getMonth() === currentMonth && date.getFullYear() === currentYear;
-            });
-
-            if(dayEvents.length > 0) {
-                const dots = document.createElement('div');
-                dots.style.display = 'flex';
-                dayEvents.forEach(e => {
-                    const dot = document.createElement('div');
-                    dot.className = `dot bg-${e.series.toLowerCase()}`;
-                    dots.appendChild(dot);
-                });
-                dayDiv.appendChild(dots);
-                dayDiv.onclick = () => openModal(dayEvents, d);
-            }
-            grid.appendChild(dayDiv);
-        }
-    }
-
-    // --- CUENTA ATRÁS ---
-    function updateCountdown() {
-        if (events.length === 0) return;
-
-        const now = new Date();
-        const next = events
-            .filter(ev => {
-                // Filtramos eventos pasados o sin hora
-                if(ev.date.includes("Sin hora")) return false;
-                return new Date(ev.date) >= now && ev.type === "Race";
-            })
-            .sort((a,b) => new Date(a.date) - new Date(b.date))[0];
-
-        if(!next) {
-            document.getElementById('next-race-name').innerText = "No hay más carreras programadas";
-            document.getElementById('timer').innerText = "--d --h --m --s";
-            return;
-        }
-
-        document.getElementById('next-race-name').innerText = `Próxima: ${next.series} - ${next.name}`;
-        
-        const target = new Date(next.date);
-        const diff = target - now;
-        
-        if (diff <= 0) {
-            document.getElementById('timer').innerText = "EN VIVO";
-            return;
-        }
-
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-        document.getElementById('timer').innerText = `${d}d ${h}h ${m}m ${s}s`;
-    }
-
-    // --- MODALES ---
-    function openModal(evs, d) {
-        const modal = document.getElementById('modal');
-        document.getElementById('modal-date').innerText = `${d} de ${new Date(currentYear, currentMonth).toLocaleString('es',{month:'long'})}`;
-        
-        document.getElementById('modal-events').innerHTML = evs.map(ev => `
-            <div class="card" style="opacity:1; margin-bottom:10px; grid-template-columns: 5px 1fr auto; animation: slideInRight 0.4s ease forwards;">
-                <div class="cat-line bg-${ev.series.toLowerCase()}"></div>
-                <div class="info">
-                    <h3 style="font-size:1.1rem;">${ev.series}</h3>
-                    <p style="color:var(--text-dim);">${ev.name}</p>
-                </div>
-                <div class="time-box" style="font-size:0.9rem;">
-                    ${ev.date.includes("T") && !ev.date.includes("Sin") ? ev.date.split("T")[1].substring(0,5) : "TBD"}
+                <div style="margin-top: 15px;">
+                    <button id="view-list-btn" class="filter-btn active">Lista</button>
+                    <button id="view-cal-btn" class="filter-btn">Calendario</button>
                 </div>
             </div>
-        `).join('');
 
-        modal.style.display = 'flex';
-        setTimeout(() => modal.classList.add('active'), 10);
-    }
+            <section id="view-list"></section>
+            
+            <section id="view-calendar" style="display:none;">
+                <div class="calendar-nav">
+                    <button id="prevMonth" class="nav-arrow">‹</button>
+                    <h2 id="month-label" style="text-transform: capitalize;"></h2>
+                    <button id="nextMonth" class="nav-arrow">›</button>
+                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+            </section>
+        </div>
 
-    function closeModal() { 
-        const modal = document.getElementById('modal');
-        modal.classList.remove('active');
-        setTimeout(() => { if(!modal.classList.contains('active')) modal.style.display = 'none'; }, 300);
-    }
+        <div id="page-standings" style="display: none;">
+            <div class="standings-header">
+                <div class="controls" style="margin-bottom: 20px;">
+                    
+                    <div class="custom-dropdown" id="standings-dropdown" data-value="F1">
+                        <div class="dropdown-selected">Formula 1</div>
+                        <div class="dropdown-options">
+                            <div class="dropdown-item" data-value="F1">Formula 1</div>
+                            <div class="dropdown-item" data-value="MotoGP">MotoGP</div>
+                            <div class="dropdown-item" data-value="WEC">WEC (Hypercar)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="toggle-container" style="margin-top:10px;">
+                        <button class="filter-btn active" id="btn-drivers" onclick="setStandingsType('drivers')">Pilotos</button>
+                        <button class="filter-btn" id="btn-constructors" onclick="setStandingsType('constructors')">Equipos/Constructores</button>
+                    </div>
+                </div>
+            </div>
 
-    // --- EVENT LISTENERS ---
-    document.getElementById('search').oninput = renderList;
-    document.querySelectorAll('.filter-btn[data-cat]').forEach(btn => {
-        btn.onclick = () => {
-            document.querySelectorAll('.filter-btn[data-cat]').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            filter = btn.dataset.cat;
+            <div class="standings-table-container">
+                <table class="standings-table">
+                    <thead>
+                        <tr>
+                            <th width="10%">Pos</th>
+                            <th>Piloto / Equipo</th>
+                            <th width="15%" style="text-align:right">Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standings-body">
+                        </tbody>
+                </table>
+            </div>
+            <p style="text-align:center; color:var(--text-dim); font-size:0.8rem; margin-top:15px;">
+                * Parrillas provisionales temporada 2026
+            </p>
+        </div>
+    </main>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2 id="modal-date" style="margin-bottom:20px; border-bottom: 1px solid #333; padding-bottom: 10px;"></h2>
+            <div id="modal-events"></div>
+            <button class="filter-btn active" onclick="closeModal()" style="width: 100%; margin-top: 20px; padding: 12px;">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. GESTIÓN GLOBAL Y VARIABLES ---
+        let events = [];
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let filter = 'all';
+        let currentStandingsType = 'drivers'; // drivers | constructors
+        let isAnimating = false; 
+
+        // --- 2. BASE DE DATOS FICTICIA COMPLETA 2026 ---
+        const mockStandings = {
+            F1: {
+                drivers: [
+                    { pos: 1, name: "Max Verstappen", team: "Red Bull Racing", pts: 0 },
+                    { pos: 2, name: "Liam Lawson", team: "Red Bull Racing", pts: 0 },
+                    { pos: 3, name: "Lando Norris", team: "McLaren", pts: 0 },
+                    { pos: 4, name: "Oscar Piastri", team: "McLaren", pts: 0 },
+                    { pos: 5, name: "Lewis Hamilton", team: "Ferrari", pts: 0 },
+                    { pos: 6, name: "Charles Leclerc", team: "Ferrari", pts: 0 },
+                    { pos: 7, name: "George Russell", team: "Mercedes", pts: 0 },
+                    { pos: 8, name: "Andrea Kimi Antonelli", team: "Mercedes", pts: 0 },
+                    { pos: 9, name: "Fernando Alonso", team: "Aston Martin", pts: 0 },
+                    { pos: 10, name: "Lance Stroll", team: "Aston Martin", pts: 0 },
+                    { pos: 11, name: "Pierre Gasly", team: "Alpine", pts: 0 },
+                    { pos: 12, name: "Jack Doohan", team: "Alpine", pts: 0 },
+                    { pos: 13, name: "Carlos Sainz", team: "Williams", pts: 0 },
+                    { pos: 14, name: "Alexander Albon", team: "Williams", pts: 0 },
+                    { pos: 15, name: "Yuki Tsunoda", team: "RB", pts: 0 },
+                    { pos: 16, name: "Isack Hadjar", team: "RB", pts: 0 },
+                    { pos: 17, name: "Esteban Ocon", team: "Haas", pts: 0 },
+                    { pos: 18, name: "Oliver Bearman", team: "Haas", pts: 0 },
+                    { pos: 19, name: "Nico Hülkenberg", team: "Audi (Sauber)", pts: 0 },
+                    { pos: 20, name: "Gabriel Bortoleto", team: "Audi (Sauber)", pts: 0 }
+                ],
+                constructors: [
+                    { pos: 1, name: "McLaren", pts: 0 },
+                    { pos: 2, name: "Ferrari", pts: 0 },
+                    { pos: 3, name: "Red Bull Racing", pts: 0 },
+                    { pos: 4, name: "Mercedes", pts: 0 },
+                    { pos: 5, name: "Aston Martin", pts: 0 },
+                    { pos: 6, name: "Alpine", pts: 0 },
+                    { pos: 7, name: "Williams", pts: 0 },
+                    { pos: 8, name: "RB (Visa Cash App)", pts: 0 },
+                    { pos: 9, name: "Haas F1 Team", pts: 0 },
+                    { pos: 10, name: "Audi F1 Team", pts: 0 }
+                ]
+            },
+            MotoGP: {
+                drivers: [
+                    { pos: 1, name: "Pecco Bagnaia", team: "Ducati Lenovo", pts: 0 },
+                    { pos: 2, name: "Marc Márquez", team: "Ducati Lenovo", pts: 0 },
+                    { pos: 3, name: "Jorge Martín", team: "Aprilia Racing", pts: 0 },
+                    { pos: 4, name: "Marco Bezzecchi", team: "Aprilia Racing", pts: 0 },
+                    { pos: 5, name: "Brad Binder", team: "KTM Factory", pts: 0 },
+                    { pos: 6, name: "Pedro Acosta", team: "KTM Factory", pts: 0 },
+                    { pos: 7, name: "Fabio Quartararo", team: "Yamaha", pts: 0 },
+                    { pos: 8, name: "Álex Rins", team: "Yamaha", pts: 0 },
+                    { pos: 9, name: "Luca Marini", team: "Honda HRC", pts: 0 },
+                    { pos: 10, name: "Joan Mir", team: "Honda HRC", pts: 0 },
+                    { pos: 11, name: "Enea Bastianini", team: "KTM Tech3", pts: 0 },
+                    { pos: 12, name: "Maverick Viñales", team: "KTM Tech3", pts: 0 },
+                    { pos: 13, name: "Álex Márquez", team: "Gresini Racing", pts: 0 },
+                    { pos: 14, name: "Fermín Aldeguer", team: "Gresini Racing", pts: 0 },
+                    { pos: 15, name: "Fabio Di Giannantonio", team: "VR46 Racing", pts: 0 },
+                    { pos: 16, name: "Franco Morbidelli", team: "VR46 Racing", pts: 0 },
+                    { pos: 17, name: "Miguel Oliveira", team: "Pramac Yamaha", pts: 0 },
+                    { pos: 18, name: "Jack Miller", team: "Pramac Yamaha", pts: 0 },
+                    { pos: 19, name: "Raúl Fernández", team: "Trackhouse", pts: 0 },
+                    { pos: 20, name: "Ai Ogura", team: "Trackhouse", pts: 0 },
+                    { pos: 21, name: "Johann Zarco", team: "LCR Honda", pts: 0 },
+                    { pos: 22, name: "Somkiat Chantra", team: "LCR Honda", pts: 0 }
+                ],
+                constructors: [
+                    { pos: 1, name: "Ducati", pts: 0 },
+                    { pos: 2, name: "KTM", pts: 0 },
+                    { pos: 3, name: "Aprilia", pts: 0 },
+                    { pos: 4, name: "Yamaha", pts: 0 },
+                    { pos: 5, name: "Honda", pts: 0 }
+                ]
+            },
+            WEC: {
+                drivers: [
+                    { pos: 1, name: "Porsche Penske #5", team: "Campbell/Christensen/Makowiecki", pts: 0 },
+                    { pos: 2, name: "Porsche Penske #6", team: "Estre/Lotterer/Vanthoor", pts: 0 },
+                    { pos: 3, name: "Ferrari AF Corse #50", team: "Fuoco/Molina/Nielsen", pts: 0 },
+                    { pos: 4, name: "Ferrari AF Corse #51", team: "Pier Guidi/Calado/Giovinazzi", pts: 0 },
+                    { pos: 5, name: "Toyota Gazoo #7", team: "Conway/Kobayashi/De Vries", pts: 0 },
+                    { pos: 6, name: "Toyota Gazoo #8", team: "Buemi/Hartley/Hirakawa", pts: 0 },
+                    { pos: 7, name: "Aston Martin Valkyrie #007", team: "Heart of Racing", pts: 0 },
+                    { pos: 8, name: "Aston Martin Valkyrie #009", team: "Heart of Racing", pts: 0 },
+                    { pos: 9, name: "Cadillac Hertz #12", team: "Jota Sport", pts: 0 },
+                    { pos: 10, name: "Cadillac Hertz #38", team: "Jota Sport", pts: 0 },
+                    { pos: 11, name: "BMW WRT #15", team: "Vanthoor/Marciello/Wittmann", pts: 0 },
+                    { pos: 12, name: "BMW WRT #20", team: "Van der Linde/Frijns/Rast", pts: 0 },
+                    { pos: 13, name: "Alpine #35", team: "Alpine Endurance", pts: 0 },
+                    { pos: 14, name: "Alpine #36", team: "Alpine Endurance", pts: 0 },
+                    { pos: 15, name: "Peugeot #93", team: "Peugeot TotalEnergies", pts: 0 },
+                    { pos: 16, name: "Peugeot #94", team: "Peugeot TotalEnergies", pts: 0 },
+                    { pos: 17, name: "Lamborghini #63", team: "Iron Lynx", pts: 0 },
+                    { pos: 18, name: "AF Corse #83", team: "Kubica/Ye/Shwartzman", pts: 0 }
+                ],
+                constructors: [
+                    { pos: 1, name: "Porsche", pts: 0 },
+                    { pos: 2, name: "Ferrari", pts: 0 },
+                    { pos: 3, name: "Toyota", pts: 0 },
+                    { pos: 4, name: "Aston Martin", pts: 0 },
+                    { pos: 5, name: "Cadillac", pts: 0 },
+                    { pos: 6, name: "BMW", pts: 0 },
+                    { pos: 7, name: "Alpine", pts: 0 },
+                    { pos: 8, name: "Peugeot", pts: 0 },
+                    { pos: 9, name: "Lamborghini", pts: 0 }
+                ]
+            }
+        };
+
+        // --- 3. TRANSICIÓN DE PÁGINAS ---
+        function switchPage(pageName) {
+            const wipe = document.getElementById('page-wipe');
+            
+            if(isAnimating) return;
+            isAnimating = true;
+
+            wipe.classList.remove('active-out');
+            void wipe.offsetWidth; 
+            wipe.classList.add('active-in');
+
+            setTimeout(() => {
+                document.getElementById('page-home').style.display = 'none';
+                document.getElementById('page-standings').style.display = 'none';
+                
+                document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+                
+                if(pageName === 'home') {
+                    document.getElementById('page-home').style.display = 'block';
+                    document.getElementById('nav-home').classList.add('active');
+                } else {
+                    document.getElementById('page-standings').style.display = 'block';
+                    document.getElementById('nav-standings').classList.add('active');
+                    loadStandingsTable();
+                }
+
+                wipe.classList.remove('active-in');
+                wipe.classList.add('active-out');
+
+                setTimeout(() => {
+                    wipe.classList.remove('active-out');
+                    wipe.style.transition = 'none';
+                    wipe.style.transform = 'translateY(100%)';
+                    isAnimating = false;
+                    setTimeout(() => {
+                        wipe.style.transition = '';
+                        wipe.style.transform = '';
+                    }, 50);
+                }, 500);
+            }, 500);
+        }
+
+        // --- 4. LÓGICA DE CLASIFICACIÓN ---
+        function setStandingsType(type) {
+            currentStandingsType = type;
+            document.getElementById('btn-drivers').classList.toggle('active', type === 'drivers');
+            document.getElementById('btn-constructors').classList.toggle('active', type === 'constructors');
+            loadStandingsTable();
+        }
+
+        async function loadStandingsTable() {
+            // AQUI ESTÁ EL CAMBIO PRINCIPAL: Leemos del div 'custom-dropdown'
+            const dropdown = document.getElementById('standings-dropdown');
+            const category = dropdown ? dropdown.dataset.value : 'F1';
+            
+            const tbody = document.getElementById('standings-body');
+            
+            if (category === 'F1' || category === 'MotoGP' || category === 'WEC') {
+                fetchRealStandings(category);
+            } else {
+                const dataGroup = mockStandings[category] || mockStandings['F1'];
+                renderStandings(dataGroup[currentStandingsType]);
+            }
+        }
+
+        async function fetchRealStandings(category) {
+            const tbody = document.getElementById('standings-body');
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Conectando con servidores...</td></tr>';
+
+            try {
+                if (category === 'F1') {
+                    const res = await fetch("https://ergast.com/api/f1/current/driverStandings.json");
+                    const data = await res.json();
+                    parseF1API(data);
+                } 
+                else if (category === 'MotoGP') {
+                    const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/lookuptable.php?l=4407&s=2025");
+                    const data = await res.json();
+                    parseMotoGPAPI(data);
+                }
+                else if (category === 'WEC') {
+                    // Mantenemos fallback para WEC
+                    console.warn("WEC API not implemented yet");
+                    renderStandings(mockStandings['WEC'][currentStandingsType]);
+                }
+            } catch (e) {
+                console.warn("Fallo en API, usando datos locales...");
+                renderStandings(mockStandings[category][currentStandingsType]);
+            }
+        }
+
+        function parseMotoGPAPI(data) {
+            if(!data.table) throw new Error("No data");
+            const results = data.table.map(item => ({
+                pos: item.intRank,
+                name: item.strTeam, 
+                team: item.strTeam,
+                pts: item.intPoints
+            }));
+            renderStandings(results);
+        }
+
+        function parseF1API(data) {
+            const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+            const results = standings.map(s => ({
+                pos: s.position,
+                name: `${s.Driver.givenName} ${s.Driver.familyName}`,
+                team: s.Constructors[0].name,
+                pts: s.points
+            }));
+            renderStandings(results);
+        }
+
+        function renderStandings(list) {
+            const tbody = document.getElementById('standings-body');
+            tbody.innerHTML = '';
+            if(!list || list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">No se encontraron datos reales.</td></tr>';
+                return;
+            }
+            list.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.style.opacity = '0';
+                tr.style.animation = `slideInRight 0.3s ease forwards ${index * 0.03}s`;
+                const posClass = item.pos <= 3 ? `pos-${item.pos}` : '';
+                tr.innerHTML = `
+                    <td><div class="pos-badge ${posClass}">${item.pos}</div></td>
+                    <td>
+                        <div style="display:flex; align-items:center; flex-wrap:wrap;">
+                            <span style="font-weight:bold; font-size:0.95rem;">${item.name}</span>
+                            <span class="team-pill">${item.team || ''}</span>
+                        </div>
+                    </td>
+                    <td style="text-align:right; font-weight:bold; font-size:1.1rem; color:var(--f1);">${item.pts}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // --- 5. LÓGICA ORIGINAL (BACKEND + CALENDARIO) ---
+        async function loadEventsFromDB() {
+            try {
+                const response = await fetch('https://racehub-api.onrender.com/api/races');
+                events = await response.json();
+                renderList();
+                updateCountdown();
+            } catch (error) {
+                console.error("El servidor de Render está despertando...", error);
+            }
+        }
+
+        function parseEventDate(str) {
+            if (!str) return new Date();
+            let datePart = str.includes('T') ? str.split('T')[0] : str;
+            return new Date(datePart + "T00:00:00");
+        }
+
+        function renderList() {
+            const list = document.getElementById('view-list');
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            list.innerHTML = "";
+
+            if (events.length === 0) {
+                list.innerHTML = "<p style='text-align:center; padding:20px; color:var(--text-dim)'>Cargando eventos...</p>";
+                return;
+            }
+
+            const filtered = events.filter(ev => {
+                const matchesFilter = filter === 'all' || ev.series === filter;
+                const matchesSearch = ev.name.toLowerCase().includes(searchTerm) || ev.series.toLowerCase().includes(searchTerm);
+                return matchesFilter && matchesSearch;
+            }).sort((a,b) => parseEventDate(a.date) - parseEventDate(b.date));
+
+            filtered.forEach((ev, index) => {
+                const d = parseEventDate(ev.date);
+                const hasTime = ev.date.includes("T") && !ev.date.includes("Sin hora");
+                
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.animationDelay = `${Math.min(index * 0.05, 1)}s`;
+                
+                card.innerHTML = `
+                    <div class="cat-line bg-${ev.series.toLowerCase()}"></div>
+                    <div class="info">
+                        <p style="color:var(--${ev.series.toLowerCase()}); font-weight:bold; font-size:0.7rem;">${ev.series}</p>
+                        <h3>${ev.name}</h3>
+                        <p style="color:var(--text-dim); font-size:0.85rem;">${ev.type}</p>
+                    </div>
+                    <div class="time-box">
+                        <div class="date">${d.getDate()} ${d.toLocaleString('es', {month:'short'})}</div>
+                        <div class="hour" style="color:var(--text-dim); font-size:0.9rem;">
+                            ${hasTime ? new Date(ev.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : 'TBD'}
+                        </div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const label = document.getElementById('month-label');
+            grid.innerHTML = "";
+            
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            label.innerText = new Date(currentYear, currentMonth).toLocaleString('es', {month:'long', year:'numeric'});
+
+            let gaps = firstDay === 0 ? 6 : firstDay - 1;
+            
+            for(let i=0; i<gaps; i++) grid.appendChild(document.createElement('div'));
+
+            for(let d=1; d<=daysInMonth; d++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day';
+                dayDiv.style.animation = `fadeIn 0.3s ease forwards ${Math.min(d * 0.02, 0.5)}s`;
+                dayDiv.innerHTML = `<span style="font-size:0.9rem; margin-bottom:4px;">${d}</span>`;
+                
+                const dayEvents = events.filter(ev => {
+                    const date = parseEventDate(ev.date);
+                    return date.getDate() === d && date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+                });
+
+                if(dayEvents.length > 0) {
+                    const dots = document.createElement('div');
+                    dots.style.display = 'flex';
+                    dayEvents.forEach(e => {
+                        const dot = document.createElement('div');
+                        dot.className = `dot bg-${e.series.toLowerCase()}`;
+                        dots.appendChild(dot);
+                    });
+                    dayDiv.appendChild(dots);
+                    dayDiv.onclick = () => openModal(dayEvents, d);
+                }
+                grid.appendChild(dayDiv);
+            }
+        }
+
+        function updateCountdown() {
+            if (events.length === 0) return;
+
+            const now = new Date();
+            const next = events
+                .filter(ev => {
+                    if(ev.date.includes("Sin hora")) return false;
+                    return new Date(ev.date) >= now && ev.type === "Race";
+                })
+                .sort((a,b) => new Date(a.date) - new Date(b.date))[0];
+
+            if(!next) {
+                document.getElementById('next-race-name').innerText = "No hay más carreras programadas";
+                document.getElementById('timer').innerText = "--d --h --m --s";
+                return;
+            }
+
+            document.getElementById('next-race-name').innerText = `Próxima: ${next.series} - ${next.name}`;
+            
+            const target = new Date(next.date);
+            const diff = target - now;
+            
+            if (diff <= 0) {
+                document.getElementById('timer').innerText = "EN VIVO";
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('timer').innerText = `${d}d ${h}h ${m}m ${s}s`;
+        }
+
+        // --- MODALES ---
+        function openModal(evs, d) {
+            const modal = document.getElementById('modal');
+            document.getElementById('modal-date').innerText = `${d} de ${new Date(currentYear, currentMonth).toLocaleString('es',{month:'long'})}`;
+            
+            document.getElementById('modal-events').innerHTML = evs.map(ev => `
+                <div class="card" style="opacity:1; margin-bottom:10px; grid-template-columns: 5px 1fr auto; animation: slideInRight 0.4s ease forwards;">
+                    <div class="cat-line bg-${ev.series.toLowerCase()}"></div>
+                    <div class="info">
+                        <h3 style="font-size:1.1rem;">${ev.series}</h3>
+                        <p style="color:var(--text-dim);">${ev.name}</p>
+                    </div>
+                    <div class="time-box" style="font-size:0.9rem;">
+                        ${ev.date.includes("T") && !ev.date.includes("Sin") ? ev.date.split("T")[1].substring(0,5) : "TBD"}
+                    </div>
+                </div>
+            `).join('');
+
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+        }
+
+        function closeModal() { 
+            const modal = document.getElementById('modal');
+            modal.classList.remove('active');
+            setTimeout(() => { if(!modal.classList.contains('active')) modal.style.display = 'none'; }, 300);
+        }
+
+        // --- LISTENERS GENERALES ---
+        document.getElementById('search').oninput = renderList;
+        document.querySelectorAll('.filter-btn[data-cat]').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.filter-btn[data-cat]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filter = btn.dataset.cat;
+                renderList();
+            };
+        });
+
+        document.getElementById('view-list-btn').onclick = () => {
+            document.getElementById('view-list').style.display = 'block';
+            document.getElementById('view-calendar').style.display = 'none';
+            document.getElementById('view-list-btn').classList.add('active');
+            document.getElementById('view-cal-btn').classList.remove('active');
             renderList();
         };
-    });
 
-    document.getElementById('view-list-btn').onclick = () => {
-        document.getElementById('view-list').style.display = 'block';
-        document.getElementById('view-calendar').style.display = 'none';
-        document.getElementById('view-list-btn').classList.add('active');
-        document.getElementById('view-cal-btn').classList.remove('active');
-        renderList();
-    };
+        document.getElementById('view-cal-btn').onclick = () => {
+            document.getElementById('view-list').style.display = 'none';
+            document.getElementById('view-calendar').style.display = 'block';
+            document.getElementById('view-cal-btn').classList.add('active');
+            document.getElementById('view-list-btn').classList.remove('active');
+            renderCalendar();
+        };
 
-    document.getElementById('view-cal-btn').onclick = () => {
-        document.getElementById('view-list').style.display = 'none';
-        document.getElementById('view-calendar').style.display = 'block';
-        document.getElementById('view-cal-btn').classList.add('active');
-        document.getElementById('view-list-btn').classList.remove('active');
-        renderCalendar();
-    };
+        document.getElementById('prevMonth').onclick = () => { 
+            currentMonth--; 
+            if(currentMonth<0){currentMonth=11;currentYear--;} 
+            renderCalendar(); 
+        };
+        document.getElementById('nextMonth').onclick = () => { 
+            currentMonth++; 
+            if(currentMonth>11){currentMonth=0;currentYear++;} 
+            renderCalendar(); 
+        };
 
-    document.getElementById('prevMonth').onclick = () => { 
-        currentMonth--; 
-        if(currentMonth<0){currentMonth=11;currentYear--;} 
-        renderCalendar(); 
-    };
-    document.getElementById('nextMonth').onclick = () => { 
-        currentMonth++; 
-        if(currentMonth>11){currentMonth=0;currentYear++;} 
-        renderCalendar(); 
-    };
+        // --- LÓGICA DEL CUSTOM DROPDOWN (NUEVO) ---
+        const dropdown = document.getElementById('standings-dropdown');
+        const selected = dropdown.querySelector('.dropdown-selected');
+        const optionsContainer = dropdown.querySelector('.dropdown-options');
+        const options = dropdown.querySelectorAll('.dropdown-item');
 
-    // --- INICIO ---
-    setInterval(updateCountdown, 1000);
-    
-    // Aquí es donde sucede la magia: Cargamos los datos de Neon al iniciar
-    loadEventsFromDB();
+        // Toggle menú
+        selected.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+            optionsContainer.classList.toggle('active');
+        });
 
-</script>
+        // Selección de opción
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                selected.innerText = option.innerText;
+                dropdown.dataset.value = option.dataset.value;
+                dropdown.classList.remove('open');
+                optionsContainer.classList.remove('active');
+                loadStandingsTable(); // Recargar tabla
+            });
+        });
+
+        // Cerrar al hacer click fuera
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+                optionsContainer.classList.remove('active');
+            }
+        });
+
+        // --- INICIO ---
+        setInterval(updateCountdown, 1000);
+        loadEventsFromDB();
+
+    </script>
+
     <footer class="main-footer">
         <p>Made by <span>josemah.</span></p>
     </footer>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
